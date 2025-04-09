@@ -21,5 +21,7 @@ class Settings(BaseSettings):
 
     DOMAIN: HttpUrl
 
+    GITHUB_WEBHOOK_SECRET: str
+
 
 settings = Settings()  # type: ignore

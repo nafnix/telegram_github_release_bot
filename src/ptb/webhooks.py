@@ -1,8 +1,13 @@
-from fastapi import APIRouter, Query, Request
+from typing import cast
+
+from fastapi import APIRouter, Request
 from telegram import Update
 
 from src.ptb import tgbot
 from src.ptb.models import WebhookUpdate
+from src.utils.telegram import text as tg_text
+
+from .dependencies import ReleaseData
 
 
 webhooks = APIRouter(tags=['PTB Webhooks'])
@@ -18,24 +23,44 @@ async def telegram(request: Request):
     )
 
 
-@webhooks.get('/submitpayload', response_model=str)
-@webhooks.post('/submitpayload', response_model=str)
-async def custom_updates(
-    user_id: int = Query(), payload: list[str] = Query()
-) -> str:
-    """
-    Handle incoming webhook updates by also putting them into the
-    `update_queue` if the required parameters were passed correctly.
-    """
-
-    await tgbot.update_queue.put(
-        WebhookUpdate(user_id=user_id, payloads=payload)
-    )
-    return "Thank you for the submission! It's being forwarded."
-
-
 @webhooks.get('/healthcheck', response_model=str)
 async def health() -> str:
     """For the health endpoint, reply with a simple plain text message."""
 
     return 'The bot is still running fine :)'
+
+
+@webhooks.post('/gh')
+async def github_webhook_release(req: Request, data: ReleaseData):
+    if data is None:
+        return
+
+    release: dict = data.pop('release')
+    release_url = cast(str, release.get('html_url'))
+    release_version = release.get('name')
+    release_published_at = release.get('published_at')
+    release_body = cast(str, release.get('body'))
+
+    repository: dict = data.pop('repository')
+    repo_name = repository.get('name')
+    repo_url = cast(str, repository.get('html_url'))
+
+    assets = []
+    for asset in release.get('assets') or []:
+        asset_name = asset.get('name')
+        asset_url = asset.get('browser_download_url')
+        assets.append({'name': asset_name, 'url': asset_url})
+
+    assets_text = '\n'.join(tg_text.link(i['name'], i['url']) for i in assets)
+    content = (
+        f'🎉 Release New Version! 🤓☝️\n'
+        f'💥 Version: {tg_text.inline_code(release_version)}\n'
+        f'🔗 Release URL: {tg_text.link(release_url, release_url)}\n'
+        f'⏲️ Published At: {tg_text.inline_code(release_published_at)}\n'
+        f'📦 Repository: {tg_text.inline_code(repo_name)}\n'
+        f'🔗 Repository URL: {tg_text.link(repo_url, repo_url)}\n\n'
+        f'📄 Files: {assets_text}\n\n'
+        f'{release_body}'
+    )
+
+    await tgbot.update_queue.put(WebhookUpdate(text=content))

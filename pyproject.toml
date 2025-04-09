@@ -10,6 +10,7 @@ dependencies = [
     "loguru>=0.7.2",
     "gunicorn>=21.2.0",
     "pydantic-settings>=2.2.1",
+    "orjson>=3.10.16",
 ]
 requires-python = "==3.11.*"
 readme = "README.md"
@@ -17,8 +18,11 @@ license = {text = "MIT"}
 
 [dependency-groups]
 dev = [
+    "datamodel-code-generator>=0.28.5",
     "devtools>=0.12.2",
     "pre-commit>=4.2.0",
+    "requests>=2.32.3",
+    "rich>=14.0.0",
     "ruff>=0.11.4",
 ]
 
@@ -47,7 +51,7 @@ select = [
     "SIM", # flake8-simplify
     "PTH", # flake8-use-pathlib
 ]
-ignore = ["E111", "E114", "E117", "B008", "ISC001"]
+ignore = ["E111", "E114", "E117", "B008", "ISC001", "E501"]
 
 # https://docs.astral.sh/ruff/settings/#lintflake8-errmsg
 # Maximum string length for string literals in exception messages.
