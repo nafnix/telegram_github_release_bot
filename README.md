@@ -1,4 +1,4 @@
-# fastapi-ptb
+# telegram github release bot
 
 ## 要求
 
@@ -44,7 +44,7 @@ docker run -dit \
 
 其中使用 `--network host` 指定该容器使用主机网络。
 
-而后在 cloudflare tunnel 添加一个 Public hostnames，subdomain 指定 `fastapi-ptb`，URL 使用 `localhost:8000` 就行，8000 端口是 Uvicorn 的默认启动端口。
+而后在 cloudflare tunnel 添加一个 Public hostnames，subdomain 指定 `telegram-github-release-bot`，URL 使用 `localhost:8000` 就行，8000 端口是 Uvicorn 的默认启动端口。
 
 ## 开发
 
@@ -114,10 +114,10 @@ cp ./.env.prod.example ./.env.prod
 
 1. 停止掉开发服务器（如果启动了的话）
 2. 取消 `./compose.yaml` 文件第 35-36 行的注释
-3. 执行 `docker compose up --build fastapi-ptb -d`
+3. 执行 `docker compose up --build telegram-github-release-bot -d`
 4. 使用 `docker compose logs -tf` 查看是否启动完毕
 5. 确定启动完毕后，再确定你那带有 HTTPS 的域名是否指向了正在运行的服务器（访问它看看是否已经如预期般）
-6. 使用 `docker compose exec fastapi-ptb python set_webhook.py` 设置机器人的 webhook url
+6. 使用 `docker compose exec telegram-github-release-bot python set_webhook.py` 设置机器人的 webhook url
 
 #### 通过带有 Container Network 的 Cloudflare Tunnel 进行部署
 
@@ -125,14 +125,13 @@ cp ./.env.prod.example ./.env.prod
 
 作为启动的步骤示例：
 
-1. 执行 `docker compose up --build fastapi-ptb -d`
+1. 执行 `docker compose up --build telegram-github-release-bot -d`
 2. 使用 `docker compose logs -tf` 查看是否启动完毕
 3. 确定启动完毕后，再确定你那带有 HTTPS 的域名是否指向了正在运行的服务器（访问它看看是否已经如预期般）
-4. 将你的 cloudflare tunnel 的 container network 与 fastapi-ptb service 进行连接：
+4. 将你的 cloudflare tunnel 的 container network 与 telegram-github-release-bot service 进行连接：
 
     ```bash
-    docker network connect <cloudflare tunnel network name> fastapi-ptb
+    docker network connect <cloudflare tunnel network name> telegram-github-release-bot
     ```
 
-5. 在 cloudflare tunnel 修改前面添加的 Public hostnames，subdomain 不需要改，URL 改为 `fastapi-ptb:80`，80 端口是 Gunicorn 的监听端口
-6. 使用 `docker compose exec fastapi-ptb python set_webhook.py` 设置机器人的 webhook url
+5. 在 cloudflare tunnel 修改前面添加的 Public hostnames，subdomain 不需要改，URL 改为 `telegram-github-release-bot:80`，80 端口是 Gunicorn 的监听端口
