@@ -38,7 +38,7 @@ WORKDIR ${BASE_DIR}
 ARG PYPI_MIRROR=https://pypi.org/simple
 
 RUN <<EOT
-    pip install --upgrade --no-cache-dir -i ${PYPI_MIRROR} -r /requirements/base.txt
+    pip install --upgrade --no-cache-dir -i ${PYPI_MIRROR} -r ./requirements/base.txt
     chmod +x entrypoint.sh
 EOT
 
