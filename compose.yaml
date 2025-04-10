@@ -4,11 +4,12 @@ x-common: &common
   restart: unless-stopped
 
 services:
-  github-release-bot:
+  telegram-github-release-bot:
     <<: [*common]
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: telegram-github-release-bot
     image: github-release-bot
     volumes:
       - .:/app
