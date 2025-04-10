@@ -4,15 +4,20 @@ x-common: &common
   restart: unless-stopped
 
 services:
-  fastapi-ptb:
+  github-release-bot:
     <<: [*common]
-    container_name: fastapi-ptb
     build:
       context: .
       dockerfile: Dockerfile
-    image: fastapi-ptb
+    image: github-release-bot
     volumes:
       - .:/app
     command: gunicorn -k uvicorn.workers.UvicornWorker src.main:app
     # ports:
     #   - 8000:80
+    networks:
+      - cf
+
+networks:
+  cf:
+    external: true

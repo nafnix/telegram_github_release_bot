@@ -4,10 +4,10 @@ FROM library/python:${PYTHON_VERSION}-slim-bookworm AS builder
 
 ARG PYPI_MIRROR=https://pypi.org/simple
 WORKDIR /tmp
-COPY ./pyproject.toml ./pdm.lock ./
+COPY ./pyproject.toml ./uv.lock ./
 RUN <<EOT
-    pip install pdm --upgrade --no-cache-dir -i ${PYPI_MIRROR}
-    pdm export --without-hashes -o ./requirements.txt --prod -v
+    pip install uv --upgrade --no-cache-dir -i ${PYPI_MIRROR}
+    uv export --no-dev -o requirements.txt
 EOT
 
 
