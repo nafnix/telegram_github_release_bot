@@ -44,11 +44,15 @@ EOT
 USER ${USER}
 WORKDIR ${BASE_DIR}
 
-COPY --from=builder /output .
+COPY --from=builder /output ./packages
 
 RUN <<EOT
     chmod +x entrypoint.sh
 EOT
 
-CMD [ "bash", "./entrypoint.sh" ]
-# ENTRYPOINT [ "bash", "./entrypoint.sh" ]
+ENV PYTHONPATH="${BASE_DIR}/packages:$PYTHONPATH" \
+    PATH="${BASE_DIR}/packages/bin:$PATH"
+
+ENTRYPOINT [ "bash", "./entrypoint.sh" ]
+
+CMD ["gunicorn", "-k", "uvicorn.workers.UvicornWorker", "src.main:app"]
