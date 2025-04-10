@@ -11,8 +11,8 @@ services:
       dockerfile: Dockerfile
     container_name: telegram-github-release-bot
     image: github-release-bot
-    volumes:
-      - .:/app
+    # volumes:
+    #   - .:/app
     command: gunicorn -k uvicorn.workers.UvicornWorker src.main:app
     # ports:
     #   - 8000:80
