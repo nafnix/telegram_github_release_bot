@@ -206,6 +206,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "python-telegram-bot" },
+    { name = "requests" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -214,7 +215,6 @@ dev = [
     { name = "datamodel-code-generator" },
     { name = "devtools" },
     { name = "pre-commit" },
-    { name = "requests" },
     { name = "rich" },
     { name = "ruff" },
 ]
@@ -228,6 +228,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.6.4" },
     { name = "pydantic-settings", specifier = ">=2.2.1" },
     { name = "python-telegram-bot", specifier = ">=21.0.1" },
+    { name = "requests", specifier = ">=2.32.3" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.29.0" },
 ]
 
@@ -236,7 +237,6 @@ dev = [
     { name = "datamodel-code-generator", specifier = ">=0.28.5" },
     { name = "devtools", specifier = ">=0.12.2" },
     { name = "pre-commit", specifier = ">=4.2.0" },
-    { name = "requests", specifier = ">=2.32.3" },
     { name = "rich", specifier = ">=14.0.0" },
     { name = "ruff", specifier = ">=0.11.4" },
 ]
