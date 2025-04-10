@@ -44,5 +44,5 @@ def underline(text: Any):
 escape_markdown = partial(escape_markdown, version=2)
 
 
-def escape(text: str) -> str:
+def escape(text: Any) -> str:
     return text if IS_HTML else escape_markdown(text)

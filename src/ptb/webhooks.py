@@ -51,16 +51,18 @@ async def github_webhook_release(req: Request, data: ReleaseData):
         asset_url = asset.get('browser_download_url')
         assets.append({'name': asset_name, 'url': asset_url})
 
-    assets_text = '\n'.join(tg_text.link(i['name'], i['url']) for i in assets)
+    assets_text = '\n'.join(
+        tg_text.link(tg_text.escape(i['name']), i['url']) for i in assets
+    )
     content = (
-        f'🎉 Release New Version! 🤓☝️\n'
-        f'💥 Version: {tg_text.inline_code(release_version)}\n'
-        f'🔗 Release URL: {tg_text.link(release_url, release_url)}\n'
-        f'⏲️ Published At: {tg_text.inline_code(release_published_at)}\n'
-        f'📦 Repository: {tg_text.inline_code(repo_name)}\n'
-        f'🔗 Repository URL: {tg_text.link(repo_url, repo_url)}\n\n'
-        f'📄 Files: {assets_text}\n\n'
-        f'{release_body}'
+        f'🎉 Release New Version{tg_text.escape("!")} 🤓☝️\n'
+        f'💥 Version: {tg_text.inline_code(tg_text.escape(release_version))}\n'
+        f'🔗 Release URL: {tg_text.link(tg_text.escape(release_url), release_url)}\n'
+        f'⏲️ Published At: {tg_text.inline_code(tg_text.escape(release_published_at))}\n'
+        f'📦 Repository: {tg_text.inline_code(tg_text.escape(repo_name))}\n'
+        f'🔗 Repository URL: {tg_text.link(tg_text.escape(repo_url), repo_url)}\n\n'
+        f'📄 Files: \n{assets_text}\n\n'
+        # f'{tg_text.escape(release_body)}'
     )
 
     await tgbot.update_queue.put(WebhookUpdate(text=content))

@@ -44,6 +44,6 @@ async def webhook_update(
     # )
     await context.bot.send_message(
         chat_id=settings.TELEGRAM_ADMIN_CHAT_ID,
-        text=text.escape(update.text),
+        text=update.text,
         parse_mode=ParseMode.MARKDOWN_V2,
     )
