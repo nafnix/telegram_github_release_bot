@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import HttpUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -22,6 +24,20 @@ class Settings(BaseSettings):
     DOMAIN: HttpUrl
 
     GITHUB_WEBHOOK_SECRET: str
+    GITHUB_WEBHOOK_EVENT: (
+        set[
+            Literal[
+                'created',
+                'deleted',
+                'edited',
+                'prereleased',
+                'published',
+                'released',
+                'unpublished',
+            ]
+        ]
+        | None
+    ) = None
 
 
 settings = Settings()  # type: ignore

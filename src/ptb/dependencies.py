@@ -35,7 +35,10 @@ def valid_release_event(
     if not hmac.compare_digest(expected_signature, signature_header):
         raise ForbiddenError(message="Request signatures didn't match!")
 
-    if event == 'release':
+    if event == 'release' and (
+        settings.GITHUB_WEBHOOK_EVENT is None
+        or payload_body.get('action') in settings.GITHUB_WEBHOOK_EVENT
+    ):
         return payload_body
     return None
 
