@@ -36,8 +36,8 @@ def valid_release_event(
         raise ForbiddenError(message="Request signatures didn't match!")
 
     if event == 'release' and (
-        settings.GITHUB_WEBHOOK_EVENT is None
-        or payload_body.get('action') in settings.GITHUB_WEBHOOK_EVENT
+        settings.GITHUB_WEBHOOK_EVENTS is None
+        or payload_body.get('action') in settings.GITHUB_WEBHOOK_EVENTS
     ):
         return payload_body
     return None
