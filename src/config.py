@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     DOMAIN: HttpUrl
 
     GITHUB_WEBHOOK_SECRET: str
-    GITHUB_WEBHOOK_EVENT: (
+    GITHUB_WEBHOOK_EVENTS: (
         set[
             Literal[
                 'created',
