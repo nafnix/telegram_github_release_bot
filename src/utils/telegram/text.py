@@ -22,6 +22,12 @@ def inline_code(text: Any):
     return f'<code>{text}</code>' if IS_HTML else f'`{text}`'
 
 
+def code(text: Any):
+    return (
+        f'<pre><code>{text}</code></pre>' if IS_HTML else f'```\n{text}\n```'
+    )
+
+
 def bold(text: Any):
     return f'<b>{text}</b>' if IS_HTML else f'**{text}**'
 
