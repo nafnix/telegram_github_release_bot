@@ -32,7 +32,7 @@ async def health() -> str:
 
 @webhooks.post('/check')
 async def check(req: Request):
-    content = tg_text.code(tg_text.escape(vars(req)))
+    content = tg_text.code(tg_text.escape(str(vars(req))))
     await tgbot.update_queue.put(WebhookUpdate(text=content))
 
 
