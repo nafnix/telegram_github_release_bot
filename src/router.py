@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from src.ptb.webhooks import webhooks as ptb_webhooks
+from src.ptb.webhooks import router as ptb_webhooks
 
 
 router = APIRouter()
