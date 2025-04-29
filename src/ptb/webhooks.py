@@ -30,6 +30,12 @@ async def health() -> str:
     return 'The bot is still running fine :)'
 
 
+@webhooks.post('/check')
+async def check(req: Request):
+    content = tg_text.code(tg_text.escape(vars(req)))
+    await tgbot.update_queue.put(WebhookUpdate(text=content))
+
+
 @webhooks.post('/gh')
 async def github_webhook_release(req: Request, data: ReleaseData):
     if data is None:
@@ -39,7 +45,7 @@ async def github_webhook_release(req: Request, data: ReleaseData):
     release_url = cast(str, release.get('html_url'))
     release_version = release.get('name')
     release_published_at = release.get('published_at')
-    release_body = cast(str, release.get('body'))
+    release_body = cast(str, release.get('body'))  # noqa: F841
 
     repository: dict = data.pop('repository')
     repo_name = repository.get('name')
