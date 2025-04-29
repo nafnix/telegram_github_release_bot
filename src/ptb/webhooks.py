@@ -7,13 +7,13 @@ from src.ptb import tgbot
 from src.ptb.models import WebhookUpdate
 from src.utils.telegram import text as tg_text
 
-from .dependencies import ReleaseData
+from .dependencies import ReleaseData, RequestIP
 
 
-webhooks = APIRouter(tags=['PTB Webhooks'])
+router = APIRouter()
 
 
-@webhooks.post('/telegram', response_model=None)
+@router.post('/telegram', response_model=None)
 async def telegram(request: Request):
     """Handle incoming Telegram updates by putting them into the
     `update_queue`"""
@@ -23,20 +23,26 @@ async def telegram(request: Request):
     )
 
 
-@webhooks.get('/healthcheck', response_model=str)
+@router.get('/healthcheck', response_model=str)
 async def health() -> str:
     """For the health endpoint, reply with a simple plain text message."""
 
     return 'The bot is still running fine :)'
 
 
-@webhooks.post('/check')
-async def check(req: Request):
-    content = tg_text.code(tg_text.escape(str(vars(req))))
+@router.post('/check')
+async def check(req: Request, req_ip: RequestIP):
+    headers = tg_text.code(tg_text.escape(str(req.headers)))
+    await tgbot.update_queue.put(WebhookUpdate(text=headers))
+
+    request_ip = tg_text.code(tg_text.escape(str(req_ip)))
+    await tgbot.update_queue.put(WebhookUpdate(text=request_ip))
+
+    content = tg_text.code(tg_text.escape(str(await req.body())))
     await tgbot.update_queue.put(WebhookUpdate(text=content))
 
 
-@webhooks.post('/gh')
+@router.post('/gh')
 async def github_webhook_release(req: Request, data: ReleaseData):
     if data is None:
         return
